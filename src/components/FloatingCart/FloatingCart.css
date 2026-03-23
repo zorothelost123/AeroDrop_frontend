@@ -1,4 +1,4 @@
-﻿.floating-cart {
+.floating-cart {
   position: fixed;
   right: 16px;
   bottom: 18px;
@@ -7,17 +7,19 @@
   border-radius: 999px;
   background: linear-gradient(130deg, #ff6a2d, #ff945e);
   color: #2f1100;
-  box-shadow: 0 16px 34px rgba(255, 106, 45, 0.35);
+  box-shadow: 0 10px 30px rgba(255, 106, 45, 0.5);
   font-weight: 800;
-  padding: 11px 16px;
+  padding: 12px 18px;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: floatingCartBounceIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .floating-cart:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 38px rgba(255, 106, 45, 0.56);
 }
 
 .floating-cart:active {
@@ -25,8 +27,8 @@
 }
 
 .floating-cart-badge {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: #091021;
   color: #d9f6ff;
@@ -37,4 +39,21 @@
 
 .floating-cart-label {
   letter-spacing: 0.04em;
+}
+
+@keyframes floatingCartBounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.9);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.03);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }

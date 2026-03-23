@@ -61,32 +61,82 @@ export default function OwnerLogin() {
 
   return (
     <main className="owner-auth-page page-enter">
-      <section className="owner-auth-card glass-panel">
-        <button className="ui-btn ghost owner-back" onClick={() => navigate("/")}>Back</button>
-        <p className="ui-tag">Owner Access</p>
-        <h1>Owner Console Login</h1>
-        <p className="owner-copy">Manage incoming orders and dispatch flow in one place.</p>
+      <section className="owner-auth-split-shell">
+        <aside className="owner-auth-brand-panel">
+          <div className="owner-auth-brand-glow owner-auth-brand-glow-top" aria-hidden="true" />
+          <div className="owner-auth-brand-glow owner-auth-brand-glow-bottom" aria-hidden="true" />
 
-        <form className="owner-form" onSubmit={handleSubmit}>
-          <label>
-            Email
-            <input className="ui-input" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
-          </label>
+          <div className="owner-auth-brand-content">
+            <img
+              className="owner-auth-brand-logo"
+              src="/imagesd/AeroDrop_perfect_Logo.png"
+              alt="AeroDrop Logo"
+            />
+            <div className="owner-auth-brand-copy">
+              <p className="ui-tag">Owner Experience</p>
+              <h1>Operations Command Center</h1>
+              <p>
+                Manage incoming orders, monitor product inventory, and handle active agents from a unified dashboard.
+              </p>
+            </div>
+          </div>
+        </aside>
 
-          <label>
-            Password
-            <input className="ui-input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required />
-          </label>
-
-          {error && <p className="owner-error">{error}</p>}
-
-          <button className="ui-btn" type="submit" disabled={isLoading}>
-            {isLoading ? "Verifying..." : "Login"}
+        <section className="owner-auth-form-panel glass-panel">
+          <button className="ui-btn ghost owner-auth-back" onClick={() => navigate("/")}>
+            Back
           </button>
-          <button className="ui-btn secondary" type="button" onClick={handleGuestLogin} disabled={isLoading}>
-            Login as Guest / Demo
-          </button>
-        </form>
+
+          <div className="owner-auth-form-intro">
+            <p className="ui-tag">Owner Access</p>
+            <h2>Admin Login</h2>
+            <p className="owner-auth-copy">
+              Sign in to manage operations.
+            </p>
+          </div>
+
+          <form className="owner-auth-form" onSubmit={handleSubmit}>
+            <label>
+              Email
+              <input
+                className="ui-input"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="owner@aerodrop.app"
+                required
+              />
+            </label>
+
+            <label>
+              Password
+              <input
+                className="ui-input"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="aerodrop123"
+                required
+              />
+            </label>
+
+            {error && <p className="owner-auth-error">{error}</p>}
+
+            <div className="owner-auth-actions">
+              <button className="ui-btn owner-auth-submit" type="submit" disabled={isLoading}>
+                {isLoading ? "Verifying..." : "Login"}
+              </button>
+              <button
+                className="ui-btn secondary owner-auth-guest"
+                type="button"
+                onClick={handleGuestLogin}
+                disabled={isLoading}
+              >
+                Login as Guest / Demo
+              </button>
+            </div>
+          </form>
+        </section>
       </section>
     </main>
   );

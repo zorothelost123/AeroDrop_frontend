@@ -64,47 +64,92 @@ export default function ClientLogin() {
 
   return (
     <main className="auth-page page-enter">
-      <section className="auth-card glass-panel">
-        <button className="ui-btn ghost auth-back" onClick={() => navigate("/")}>Back</button>
+      <section className="auth-split-shell">
+        <aside className="auth-brand-panel">
+          <div className="auth-brand-glow auth-brand-glow-top" aria-hidden="true" />
+          <div className="auth-brand-glow auth-brand-glow-bottom" aria-hidden="true" />
 
-        <p className="ui-tag">Client Access</p>
-        <h1>Welcome to AeroDrop Store</h1>
-        <p className="auth-copy">Sign in to shop, checkout, and track live delivery.</p>
-
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <label>
-            Email
-            <input
-              className="ui-input"
-              type="email"
-              value={formData.email}
-              onChange={(event) => setFormData((prev) => ({ ...prev, email: event.target.value }))}
-              placeholder="client@aerodrop.app"
-              required
+          <div className="auth-brand-content">
+            <img
+              className="auth-brand-logo"
+              src="/imagesd/AeroDrop_perfect_Logo.png"
+              alt="AeroDrop Logo"
             />
-          </label>
 
-          <label>
-            Password
-            <input
-              className="ui-input"
-              type="password"
-              value={formData.password}
-              onChange={(event) => setFormData((prev) => ({ ...prev, password: event.target.value }))}
-              placeholder="client123"
-              required
-            />
-          </label>
+            <div className="auth-brand-copy">
+              <p className="ui-tag">Client Experience</p>
+              <h1>Fast essentials, polished checkout, live delivery visibility.</h1>
+              <p>
+                AeroDrop&apos;s client flow is built to demo browsing, payment, and tracking in one
+                clean sequence without setup friction.
+              </p>
+            </div>
+          </div>
+        </aside>
 
-          {error && <p className="auth-error">{error}</p>}
-
-          <button className="ui-btn" type="submit" disabled={!canSubmit}>
-            {isLoading ? "Signing In..." : "Login"}
+        <section className="auth-form-panel glass-panel">
+          <button className="ui-btn ghost auth-back" onClick={() => navigate("/")}>
+            Back
           </button>
-          <button className="ui-btn secondary" type="button" onClick={handleGuestLogin} disabled={isLoading}>
-            Login as Guest / Demo
-          </button>
-        </form>
+
+          <div className="auth-form-intro">
+            <p className="ui-tag">Client Access</p>
+            <h2>Welcome to AeroDrop Store</h2>
+            <p className="auth-copy">
+              Sign in to shop daily essentials, check out with guest access, and follow delivery
+              in real time.
+            </p>
+          </div>
+
+          <div className="auth-demo-banner">
+            <span>Guest demo ready</span>
+            <small>{demoCredentials.email}</small>
+          </div>
+
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <label>
+              Email
+              <input
+                className="ui-input"
+                type="email"
+                value={formData.email}
+                onChange={(event) => setFormData((prev) => ({ ...prev, email: event.target.value }))}
+                placeholder="client@aerodrop.app"
+                required
+              />
+            </label>
+
+            <label>
+              Password
+              <input
+                className="ui-input"
+                type="password"
+                value={formData.password}
+                onChange={(event) =>
+                  setFormData((prev) => ({ ...prev, password: event.target.value }))
+                }
+                placeholder="client123"
+                required
+              />
+            </label>
+
+            {error && <p className="auth-error">{error}</p>}
+
+            <div className="auth-actions">
+              <button className="ui-btn auth-submit" type="submit" disabled={!canSubmit}>
+                {isLoading ? "Signing In..." : "Login"}
+              </button>
+              <button
+                className="ui-btn secondary auth-guest"
+                type="button"
+                onClick={handleGuestLogin}
+                disabled={isLoading}
+              >
+                Login as Guest
+              </button>
+            </div>
+          </form>
+        </section>
       </section>
     </main>
   );

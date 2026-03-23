@@ -1,4 +1,4 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap");
 
 :root {
   --bg-0: #040914;
@@ -16,6 +16,52 @@
   --shadow-glow: 0 12px 40px rgba(27, 232, 255, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --radius-xl: 22px;
   --radius-lg: 16px;
+  
+  --bg-primary: #f5f7fb;
+  --bg-secondary: #edf1f7;
+  --hero-surface: linear-gradient(180deg, #fcfdff 0%, #eef2f7 100%);
+  --nav-surface: rgba(255, 255, 255, 0.82);
+  --card-surface: rgba(255, 255, 255, 0.88);
+  --search-surface: rgba(255, 255, 255, 0.98);
+  --text-primary: #101828;
+  --text-secondary: #5f6c80;
+  --text-soft: #7b8798;
+  --line-soft: rgba(15, 23, 42, 0.08);
+  --brand-accent: #ff5b14;
+  --brand-accent-strong: #ff3d00;
+  --brand-accent-shadow: rgba(255, 91, 20, 0.2);
+  --brand-highlight: #0f9fe8;
+  --button-text: #ffffff;
+  --hero-orb-left: rgba(255, 91, 20, 0.14);
+  --hero-orb-right: rgba(15, 159, 232, 0.12);
+  --shadow-soft: 0 22px 60px rgba(15, 23, 42, 0.12);
+  --shadow-strong: 0 28px 80px rgba(15, 23, 42, 0.16);
+  --toggle-track: #d8e0eb;
+  --toggle-thumb: linear-gradient(135deg, #ffffff 0%, #dce6f3 100%);
+}
+
+body.dark-mode, .dark-mode {
+  --bg-primary: #06111f;
+  --bg-secondary: #040b15;
+  --hero-surface: linear-gradient(180deg, #091627 0%, #06111f 45%, #040b15 100%);
+  --nav-surface: rgba(6, 17, 31, 0.78);
+  --card-surface: rgba(10, 19, 34, 0.82);
+  --search-surface: rgba(255, 255, 255, 0.98);
+  --text-primary: #f8fbff;
+  --text-secondary: #afbdd0;
+  --text-soft: #8ea0ba;
+  --line-soft: rgba(255, 255, 255, 0.12);
+  --brand-accent: #ff7a1b;
+  --brand-accent-strong: #ff5200;
+  --brand-accent-shadow: rgba(255, 82, 0, 0.28);
+  --brand-highlight: #00e5ff;
+  --button-text: #06111f;
+  --hero-orb-left: rgba(0, 229, 255, 0.12);
+  --hero-orb-right: rgba(255, 82, 0, 0.18);
+  --shadow-soft: 0 24px 70px rgba(0, 0, 0, 0.24);
+  --shadow-strong: 0 32px 100px rgba(0, 0, 0, 0.3);
+  --toggle-track: rgba(255, 255, 255, 0.14);
+  --toggle-thumb: linear-gradient(135deg, #ffffff 0%, #d3e3ff 100%);
 }
 
 * {
@@ -136,4 +182,53 @@ button {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #9defff;
+}
+
+/* Global Theme Toggle Button */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  background: var(--card-surface);
+  color: var(--text-primary);
+  padding: 9px 14px;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.toggle-track {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--toggle-track);
+  flex-shrink: 0;
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--toggle-thumb);
+  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.16);
+  transition: transform 0.22s ease;
+}
+
+body.dark-mode .toggle-thumb, .dark-mode .toggle-thumb {
+  transform: translateX(20px);
+}
+
+.theme-toggle-label {
+  font-size: 14px;
+  font-weight: 700;
 }

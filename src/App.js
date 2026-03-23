@@ -23,7 +23,11 @@ const RequireOwner = ({ children }) => {
 const RequireAgent = ({ children }) => {
   const agentToken = localStorage.getItem(STORAGE_KEYS.agentToken);
   const agent = localStorage.getItem(STORAGE_KEYS.agent);
-  return agent && agentToken ? children : <Navigate to="/agent/login" replace />;
+  return agent && agentToken ? (
+    children
+  ) : (
+    <Navigate to="/agent/login" replace />
+  );
 };
 
 export default function App() {

@@ -2,7 +2,13 @@ import React, { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
 import { Circle, MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { ADDRESS_BASE, DELIVERY_BASE, PAYMENT_BASE, RAZORPAY_KEY, STORAGE_KEYS } from "../../utils/api";
+import {
+  ADDRESS_BASE,
+  DELIVERY_BASE,
+  PAYMENT_BASE,
+  RAZORPAY_KEY,
+  STORAGE_KEYS,
+} from "../../utils/api";
 import { generateStoreWithin700m } from "../../utils/geo";
 import "./CheckoutModal.css";
 
@@ -53,9 +59,14 @@ const MapCenterUpdater = ({ center }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (center) {
-      map.setView(center, 18);
-    }
+    const timer = window.setTimeout(() => {
+      map.invalidateSize();
+      if (center) {
+        map.setView(center, 18);
+      }
+    }, 240);
+
+    return () => window.clearTimeout(timer);
   }, [center, map]);
 
   return null;
@@ -364,7 +375,6 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
       const createOrderData = await createOrderResponse.json().catch(() => ({}));
       const razorpayOrder = createOrderData?.order;
 
-      // If payment routes are not mounted in backend, continue demo flow by placing order directly.
       if (createOrderResponse.status === 404) {
         setIsPlacingOrder(true);
         await placeDeliveryOrder();
@@ -451,134 +461,152 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
     <div className="checkout-overlay" onClick={onClose}>
       <section className="checkout-modal glass-panel" onClick={(event) => event.stopPropagation()}>
         <header className="checkout-header">
-          <h2>Secure Checkout</h2>
-          <button className="ui-btn ghost" onClick={onClose} disabled={isBusy}>
-            Close
+          <div>
+            <p className="checkout-kicker">AeroDrop Checkout</p>
+            <h2>Secure Checkout</h2>
+          </div>
+          <button
+            type="button"
+            className="checkout-close"
+            onClick={onClose}
+            disabled={isBusy}
+            aria-label="Close checkout"
+          >
+            ×
           </button>
         </header>
 
-        <section className="checkout-block">
-          <div className="checkout-row-head">
-            <h3>Delivery Address</h3>
-            <div>
-              <button className="ui-btn ghost" type="button" onClick={openAddAddress}>
-                Add
-              </button>
-              <button
-                className="ui-btn ghost"
-                type="button"
-                onClick={openEditAddress}
-                disabled={!addresses.length}
-              >
-                Edit
-              </button>
-            </div>
-          </div>
-
-          {loadingAddresses ? (
-            <p className="checkout-helper">Loading addresses...</p>
-          ) : addresses.length === 0 ? (
-            <p className="checkout-helper">No address found. Add one to continue.</p>
-          ) : (
-            <div className="checkout-address-list">
-              {addresses.map((address) => {
-                const addressId = String(address.id);
-                const selected = selectedAddressId === addressId;
-                return (
-                  <label
-                    key={addressId}
-                    className={`checkout-address ${selected ? "selected" : ""}`}
-                  >
-                    <input
-                      type="radio"
-                      checked={selected}
-                      onChange={() => setSelectedAddressId(addressId)}
-                    />
-                    <span>
-                      <strong>{address.address_type || "Address"}</strong>
-                      <small>
-                        {[address.street_address, address.city, address.state]
-                          .filter(Boolean)
-                          .join(", ")}
-                      </small>
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
-          )}
-        </section>
-
-        {deliveryPin && (
-          <section className="checkout-block map-block">
-            <p>Drag the pin to your exact location</p>
-            <div className="checkout-map-wrap">
-              <MapContainer center={deliveryPin} zoom={18} style={{ height: "100%", width: "100%" }}>
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <Marker
-                  position={deliveryPin}
-                  draggable={true}
-                  eventHandlers={{
-                    dragend: (event) => {
-                      const { lat, lng } = event.target.getLatLng();
-                      setDeliveryPin([lat, lng]);
-                      setStoreHintPin(generateStoreWithin700m(lat, lng, Date.now()));
-                    },
-                  }}
-                  icon={deliveryIcon}
+        <div className="checkout-drawer-content">
+          <section className="checkout-block">
+            <div className="checkout-row-head">
+              <h3>Delivery Address</h3>
+              <div>
+                <button className="ui-btn ghost" type="button" onClick={openAddAddress}>
+                  Add
+                </button>
+                <button
+                  className="ui-btn ghost"
+                  type="button"
+                  onClick={openEditAddress}
+                  disabled={!addresses.length}
                 >
-                  <Popup>Your delivery point</Popup>
-                </Marker>
-                {storeHintPin && (
-                  <Marker position={storeHintPin} icon={storeHintIcon}>
-                    <Popup>Dynamic store point generated within 700m radius</Popup>
-                  </Marker>
-                )}
-                <Circle
+                  Edit
+                </button>
+              </div>
+            </div>
+
+            {loadingAddresses ? (
+              <p className="checkout-helper">Loading addresses...</p>
+            ) : addresses.length === 0 ? (
+              <p className="checkout-helper">No address found. Add one to continue.</p>
+            ) : (
+              <div className="checkout-address-list">
+                {addresses.map((address) => {
+                  const addressId = String(address.id);
+                  const selected = selectedAddressId === addressId;
+                  return (
+                    <label
+                      key={addressId}
+                      className={`checkout-address ${selected ? "selected" : ""}`}
+                    >
+                      <input
+                        type="radio"
+                        checked={selected}
+                        onChange={() => setSelectedAddressId(addressId)}
+                      />
+                      <span>
+                        <strong>{address.address_type || "Address"}</strong>
+                        <small>
+                          {[address.street_address, address.city, address.state]
+                            .filter(Boolean)
+                            .join(", ")}
+                        </small>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+
+          {deliveryPin && (
+            <section className="checkout-block map-block">
+              <p>Drag the pin to your exact location</p>
+              <div className="checkout-map-wrap">
+                <MapContainer
                   center={deliveryPin}
-                  radius={700}
-                  pathOptions={{ color: "#1be8ff", dashArray: "6 6" }}
-                />
-                <MapCenterUpdater center={deliveryPin} />
-              </MapContainer>
+                  zoom={18}
+                  style={{ height: "100%", width: "100%" }}
+                >
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  <Marker
+                    position={deliveryPin}
+                    draggable={true}
+                    eventHandlers={{
+                      dragend: (event) => {
+                        const { lat, lng } = event.target.getLatLng();
+                        setDeliveryPin([lat, lng]);
+                        setStoreHintPin(generateStoreWithin700m(lat, lng, Date.now()));
+                      },
+                    }}
+                    icon={deliveryIcon}
+                  >
+                    <Popup>Your delivery point</Popup>
+                  </Marker>
+                  {storeHintPin && (
+                    <Marker position={storeHintPin} icon={storeHintIcon}>
+                      <Popup>Dynamic store point generated within 700m radius</Popup>
+                    </Marker>
+                  )}
+                  <Circle
+                    center={deliveryPin}
+                    radius={700}
+                    pathOptions={{ color: "#1be8ff", dashArray: "6 6" }}
+                  />
+                  <MapCenterUpdater center={deliveryPin} />
+                </MapContainer>
+              </div>
+            </section>
+          )}
+
+          <section className="checkout-block">
+            <h3>Bill Summary</h3>
+            <div className="checkout-summary-row">
+              <span>Items Total</span>
+              <span>{formatPrice(grandTotal)}</span>
+            </div>
+            <div className="checkout-summary-row">
+              <span>Delivery Fee</span>
+              <span>FREE</span>
+            </div>
+            <div className="checkout-summary-row total">
+              <strong>To Pay</strong>
+              <strong>{formatPrice(grandTotal)}</strong>
             </div>
           </section>
-        )}
 
-        <section className="checkout-block">
-          <h3>Bill Summary</h3>
-          <div className="checkout-summary-row">
-            <span>Items Total</span>
-            <span>{formatPrice(grandTotal)}</span>
-          </div>
-          <div className="checkout-summary-row">
-            <span>Delivery Fee</span>
-            <span>FREE</span>
-          </div>
-          <div className="checkout-summary-row total">
-            <strong>To Pay</strong>
-            <strong>{formatPrice(grandTotal)}</strong>
-          </div>
-        </section>
+          {error && <p className="checkout-error">{error}</p>}
 
-        {error && <p className="checkout-error">{error}</p>}
-
-        <button
-          className="ui-btn secondary checkout-pay"
-          type="button"
-          disabled={isBusy || !selectedAddressId || cart.length === 0}
-          onClick={handlePayAndPlaceOrder}
-        >
-          {isPlacingOrder
-            ? "Placing Order..."
-            : isProcessingPayment
-            ? "Opening Payment..."
-            : "Pay and Place Order"}
-        </button>
+          <button
+            className="ui-btn secondary checkout-pay"
+            type="button"
+            disabled={isBusy || !selectedAddressId || cart.length === 0}
+            onClick={handlePayAndPlaceOrder}
+          >
+            {isPlacingOrder
+              ? "Placing Order..."
+              : isProcessingPayment
+              ? "Opening Payment..."
+              : "Pay and Place Order"}
+          </button>
+        </div>
 
         {showAddressForm && (
           <div className="checkout-form-overlay" onClick={() => setShowAddressForm(false)}>
-            <section className="checkout-form-modal glass-panel" onClick={(event) => event.stopPropagation()}>
+            <section
+              className="checkout-form-modal glass-panel"
+              onClick={(event) => event.stopPropagation()}
+            >
               <header>
                 <h4>{addressFormData.id ? "Edit Address" : "Add Address"}</h4>
                 <button className="ui-btn ghost" onClick={() => setShowAddressForm(false)}>
@@ -586,7 +614,11 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
                 </button>
               </header>
 
-              <button className="ui-btn ghost detect" onClick={detectCurrentLocation} type="button">
+              <button
+                className="ui-btn ghost detect"
+                onClick={detectCurrentLocation}
+                type="button"
+              >
                 {isDetecting ? "Detecting..." : "Use my current location"}
               </button>
 

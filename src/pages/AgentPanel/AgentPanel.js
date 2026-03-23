@@ -86,6 +86,35 @@ export default function AgentPanel() {
   const [simIndex, setSimIndex] = useState(0);
   const [enteredOtp, setEnteredOtp] = useState("");
   const [otpError, setOtpError] = useState("");
+  const [theme, setTheme] = useState(() => localStorage.getItem("aeroTheme") || "dark");
+
+  useEffect(() => {
+    localStorage.setItem("aeroTheme", theme);
+    if (theme === "dark") {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === "dark" ? "light" : "dark");
+  };
+
+  const handleStatusToggle = async () => {
+    const nextStatus = !isOnline;
+    setIsOnline(nextStatus);
+    try {
+      await fetch(`${DELIVERY_BASE}/agent/status`, {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ is_online: nextStatus }),
+      });
+    } catch (err) {
+      console.error("Error updating agent status", err);
+      setIsOnline(!nextStatus);
+    }
+  };
 
   const token = localStorage.getItem(STORAGE_KEYS.agentToken);
 
@@ -436,6 +465,9 @@ export default function AgentPanel() {
             </div>
             <div className="agent-actions-row">
               <span className="agent-status-chip">{String(status || "-").replace(/_/g, " ")}</span>
+              <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme" style={{ padding: '6px 12px' }}>
+                <div className="toggle-track"><div className="toggle-thumb" /></div>
+              </button>
               <button className="ui-btn secondary" onClick={handleLogout}>
                 Logout
               </button>
@@ -596,7 +628,12 @@ export default function AgentPanel() {
               <h1>{agent.name || "Agent"}</h1>
               <p>ID: {agent.agent_id || agent.id} | Zone: Not Set</p>
             </div>
-            <button className="ui-btn secondary" onClick={handleLogout}>Logout</button>
+            <div className="agent-actions-row">
+              <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme" style={{ padding: '6px 12px' }}>
+                <div className="toggle-track"><div className="toggle-thumb" /></div>
+              </button>
+              <button className="ui-btn secondary" onClick={handleLogout}>Logout</button>
+            </div>
           </header>
 
           <section className="agent-zone-card">
@@ -651,9 +688,12 @@ export default function AgentPanel() {
 
           <div className="agent-actions-row">
             <label className="agent-toggle">
-              <input type="checkbox" checked={isOnline} onChange={() => setIsOnline((prev) => !prev)} />
+              <input type="checkbox" checked={isOnline} onChange={handleStatusToggle} />
               <span>{isOnline ? "Online" : "Offline"}</span>
             </label>
+            <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme" style={{ padding: '6px 12px' }}>
+              <div className="toggle-track"><div className="toggle-thumb" /></div>
+            </button>
             <button className="ui-btn secondary" onClick={handleLogout}>Logout</button>
           </div>
         </header>

@@ -85,6 +85,20 @@ export default function ClientStore() {
   const [showOrders, setShowOrders] = useState(false);
   const [orderHistory, setOrderHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem("aeroTheme") || "dark");
+
+  useEffect(() => {
+    localStorage.setItem("aeroTheme", theme);
+    if (theme === "dark") {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === "dark" ? "light" : "dark");
+  };
 
   const client = useMemo(() => readClient(), []);
 
@@ -232,13 +246,22 @@ export default function ClientStore() {
     <main className="store-page page-enter">
       <section className="ui-shell store-shell glass-panel">
         <header className="store-header">
-          <div>
+          <div className="store-hero-copy">
             <p className="ui-tag">AeroDrop Client Store</p>
-            <h1>Daily Essentials, Instant Delivery</h1>
-            <p>{client?.name || client?.email || "Client"}</p>
+            <h1>Instant essentials with demo-ready checkout.</h1>
+            <p>
+              {client?.name || client?.email || "Client"} is browsing a fast grid built for live
+              orders, guest checkout, and realtime tracking.
+            </p>
           </div>
 
           <div className="store-actions">
+            <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+              <div className="toggle-track">
+                <div className="toggle-thumb" />
+              </div>
+              <span className="theme-toggle-label">{theme === "dark" ? "🌙 Dark" : "☀️ Light"}</span>
+            </button>
             <button className="ui-btn ghost" onClick={() => setShowOrders(true)}>
               My Orders
             </button>
@@ -266,8 +289,25 @@ export default function ClientStore() {
                   : 0;
 
               return (
-                <article key={product.id} className="store-card glass-panel">
-                  <div className="store-image-wrap">
+                <article key={product.id} className="store-card">
+                  <div className="store-image-wrap compact-image-wrap">
+                    <div className={`store-card-badges${discount > 0 ? " has-offer" : ""}`}>
+                      {discount > 0 ? (
+                        <span className="store-badge offer">{discount}% OFF</span>
+                      ) : null}
+                      <span
+                        className={`store-badge ${
+                          product.stock === 0 ? "sold-out" : "available"
+                        }`}
+                      >
+                        {product.stock === 0
+                          ? "Sold out"
+                          : product.stock
+                          ? `${product.stock} left`
+                          : "In stock"}
+                      </span>
+                    </div>
+
                     {product.image ? (
                       <img src={product.image} alt={product.name} className="store-image" />
                     ) : (
@@ -281,35 +321,32 @@ export default function ClientStore() {
 
                     <div className="store-price-row">
                       <strong>{formatPrice(product.price)}</strong>
-                      {product.originalPrice > product.price && (
+                      {product.originalPrice > product.price ? (
                         <span>{formatPrice(product.originalPrice)}</span>
-                      )}
-                    </div>
-
-                    {discount > 0 && <div className="store-discount">{discount}% OFF</div>}
-                    <div className="store-stock">
-                      {product.stock === 0
-                        ? "Out of stock"
-                        : product.stock
-                        ? `${product.stock} left`
-                        : "In stock"}
+                      ) : null}
                     </div>
                   </div>
 
                   <div className="store-card-footer">
                     {qty > 0 ? (
                       <div className="store-qty-controls">
-                        <button onClick={() => decreaseQuantity(product.id)}>-</button>
+                        <button type="button" onClick={() => decreaseQuantity(product.id)}>
+                          -
+                        </button>
                         <span>{qty}</span>
-                        <button onClick={() => increaseQuantity(product.id)}>+</button>
+                        <button type="button" onClick={() => increaseQuantity(product.id)}>
+                          +
+                        </button>
                       </div>
                     ) : (
                       <button
-                        className="ui-btn"
+                        type="button"
+                        className="store-add-button"
                         onClick={() => addToCart(product)}
                         disabled={product.stock === 0}
                       >
-                        {product.stock === 0 ? "Sold Out" : "Add"}
+                        <span>{product.stock === 0 ? "Sold Out" : "Add"}</span>
+                        <span className="store-add-plus">{product.stock === 0 ? "!" : "+"}</span>
                       </button>
                     )}
                   </div>
@@ -326,7 +363,10 @@ export default function ClientStore() {
         <div className="store-overlay" onClick={() => setIsCartOpen(false)}>
           <section className="store-cart glass-panel" onClick={(event) => event.stopPropagation()}>
             <header>
-              <h2>Cart</h2>
+              <div>
+                <h2>Cart</h2>
+                <p>Review selected essentials before checkout.</p>
+              </div>
               <button className="ui-btn ghost" onClick={() => setIsCartOpen(false)}>
                 Close
               </button>
@@ -342,9 +382,13 @@ export default function ClientStore() {
                       <h4>{item.name}</h4>
                       <p>{formatPrice(item.price)}</p>
                       <div className="store-qty-controls compact">
-                        <button onClick={() => decreaseQuantity(item.id)}>-</button>
+                        <button type="button" onClick={() => decreaseQuantity(item.id)}>
+                          -
+                        </button>
                         <span>{item.quantity}</span>
-                        <button onClick={() => increaseQuantity(item.id)}>+</button>
+                        <button type="button" onClick={() => increaseQuantity(item.id)}>
+                          +
+                        </button>
                       </div>
                     </div>
                     <button className="ui-btn ghost" onClick={() => removeFromCart(item.id)}>
@@ -388,7 +432,10 @@ export default function ClientStore() {
         <div className="store-overlay" onClick={() => setShowOrders(false)}>
           <section className="store-orders glass-panel" onClick={(event) => event.stopPropagation()}>
             <header>
-              <h2>Order History</h2>
+              <div>
+                <h2>Order History</h2>
+                <p>Track previous orders and resume the fulfillment flow.</p>
+              </div>
               <button className="ui-btn ghost" onClick={() => setShowOrders(false)}>
                 Close
               </button>
