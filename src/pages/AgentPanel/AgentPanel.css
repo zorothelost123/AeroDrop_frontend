@@ -1,0 +1,245 @@
+﻿.agent-page {
+  min-height: 100%;
+  padding: 20px 0 30px;
+}
+
+.agent-shell {
+  border-radius: 24px;
+  padding: 16px;
+}
+
+.agent-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.agent-header h1 {
+  margin: 8px 0 6px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(24px, 4vw, 38px);
+}
+
+.agent-header p {
+  margin: 0;
+  color: var(--text-1);
+}
+
+.agent-actions-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.agent-status-chip {
+  border-radius: 999px;
+  padding: 8px 11px;
+  background: rgba(27, 232, 255, 0.16);
+  border: 1px solid rgba(27, 232, 255, 0.26);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+  font-weight: 700;
+  color: #95f3ff;
+}
+
+.agent-toggle {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(5, 14, 28, 0.5);
+  padding: 8px 10px;
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  color: #cce0fa;
+  font-size: 14px;
+}
+
+.agent-zone-card,
+.agent-active-card {
+  margin-top: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(6, 14, 27, 0.45);
+  padding: 12px;
+}
+
+.agent-zone-card h3 {
+  margin: 0;
+}
+
+.agent-zone-card p {
+  margin: 6px 0 10px;
+  color: #afc6e8;
+}
+
+.agent-zone-map,
+.agent-map-wrap {
+  margin-bottom: 10px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: var(--shadow-deep);
+}
+
+.agent-active-card p {
+  margin: 6px 0;
+  color: #b4cae8;
+}
+
+.agent-active-card > .ui-btn,
+.agent-pickup-block > .ui-btn {
+  margin-top: 10px;
+}
+
+.agent-pickup-block {
+  margin-top: 10px;
+}
+
+.agent-items-box {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: rgba(3, 10, 22, 0.5);
+  padding: 10px;
+}
+
+.agent-items-box h4 {
+  margin: 0;
+}
+
+.agent-items-box ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: #bfd2ee;
+}
+
+.agent-distance-box {
+  margin-top: 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: rgba(4, 12, 24, 0.48);
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+
+.agent-distance-box p {
+  margin: 0;
+}
+
+.agent-distance-box strong {
+  color: #9df4ff;
+}
+
+.agent-otp-box {
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 1px dashed rgba(255, 166, 120, 0.48);
+  background: rgba(255, 106, 45, 0.1);
+  padding: 10px;
+}
+
+.agent-otp-box h4 {
+  margin: 0;
+}
+
+.agent-otp-box p {
+  margin: 6px 0;
+}
+
+.agent-error {
+  margin: 6px 0 0;
+  color: #ff9cb0;
+}
+
+.agent-success-box {
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(49, 213, 161, 0.45);
+  background: rgba(49, 213, 161, 0.12);
+  padding: 10px;
+}
+
+.agent-success-box h3 {
+  margin: 0;
+}
+
+.agent-jobs-head {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.agent-jobs-head h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.agent-empty {
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.24);
+  background: rgba(6, 15, 29, 0.45);
+  padding: 14px;
+  color: #b6cae9;
+  text-align: center;
+}
+
+.agent-job-list {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.agent-job-card {
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.agent-job-card h3 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.agent-job-card p {
+  margin: 4px 0;
+  color: #b4cae8;
+}
+
+.agent-job-card small {
+  color: #90acd2;
+}
+
+@media (max-width: 980px) {
+  .agent-job-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .agent-header {
+    flex-direction: column;
+  }
+
+  .agent-actions-row {
+    width: 100%;
+  }
+
+  .agent-actions-row .ui-btn.secondary {
+    flex: 1;
+  }
+
+  .agent-distance-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
