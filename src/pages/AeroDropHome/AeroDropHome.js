@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AeroDrop3DHero from "../../components/AeroDrop3DHero/AeroDrop3DHero";
 import "./AeroDropHome.css";
 
 const moduleGuides = [
@@ -119,8 +120,22 @@ export default function AeroDropHome() {
   };
 
   return (
-    <div className={`aerodrop-home-container${theme === "dark" ? " dark-mode" : ""}`}>
-      <nav className="aero-navbar">
+    <div className="aerodrop-home-container">
+      
+      {/* Global 3D Background spanning the entire page */}
+      <div style={{ 
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        width: '100vw', 
+        height: '100vh', 
+        zIndex: 0, 
+        pointerEvents: 'none' 
+      }}>
+         <AeroDrop3DHero />
+      </div>
+
+      <nav className="aero-navbar" style={{ position: 'relative', zIndex: 40 }}>
         <button type="button" className="nav-logo" onClick={() => navigate("/")}>
           <img src="/imagesd/AeroDrop_perfect_Logo.png" alt="AeroDrop Logo" />
           <span>AeroDrop</span>
@@ -131,7 +146,7 @@ export default function AeroDropHome() {
             type="button"
             className="theme-toggle"
             onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
-            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            aria-label="Toggle theme"
           >
             <span className="toggle-track" aria-hidden="true">
               <span className="toggle-thumb" />
@@ -160,14 +175,8 @@ export default function AeroDropHome() {
         </div>
       </nav>
 
-      <main className="home-scroll-layout">
-        <section className="hero-section">
-          <div className="hero-image-shell hero-image-left" aria-hidden="true">
-            <div className="hero-image-float hero-image-float-left">
-              <img className="hero-image-art" src="/imagesd/Vegetables.png" alt="" />
-            </div>
-          </div>
-
+      <main className="home-scroll-layout" style={{ position: 'relative', zIndex: 10 }}>
+        <section className="hero-section" style={{ background: 'transparent' }}>
           <div className="hero-content">
             <p className="hero-eyebrow">AeroDrop Delivery Network</p>
             <h1 className="hero-title">
@@ -188,12 +197,6 @@ export default function AeroDropHome() {
               <button type="button" className="find-food-btn" onClick={handleSearch}>
                 Find Food
               </button>
-            </div>
-          </div>
-
-          <div className="hero-image-shell hero-image-right" aria-hidden="true">
-            <div className="hero-image-float hero-image-float-right">
-              <img className="hero-image-art" src="/imagesd/Biryani.jpg" alt="" />
             </div>
           </div>
         </section>
@@ -229,7 +232,7 @@ export default function AeroDropHome() {
               return (
                 <article
                   key={module.id}
-                  className={`accordion-item${isOpen ? " is-open" : ""}`}
+                  className={`accordion-item ${isOpen ? "is-open" : ""}`}
                 >
                   <button
                     type="button"
@@ -256,7 +259,7 @@ export default function AeroDropHome() {
                     <div className="accordion-panel-inner">
                       <ol className="instruction-list">
                         {module.instructions.map((instruction, index) => (
-                          <li key={`${module.id}-${index}`} className="instruction-item">
+                          <li key={index} className="instruction-item">
                             {instruction.label ? <strong>{instruction.label}: </strong> : null}
                             <span>{instruction.text}</span>
                           </li>
