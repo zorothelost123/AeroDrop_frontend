@@ -225,6 +225,7 @@ export default function ClientStore() {
 
   const handleLogout = () => {
     localStorage.removeItem(STORAGE_KEYS.client);
+    localStorage.removeItem(STORAGE_KEYS.clientToken);
     localStorage.removeItem("marsUser");
     localStorage.removeItem(STORAGE_KEYS.cart);
     navigate("/", { replace: true });

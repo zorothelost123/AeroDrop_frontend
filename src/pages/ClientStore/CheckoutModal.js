@@ -8,6 +8,7 @@ import {
   PAYMENT_BASE,
   RAZORPAY_KEY,
   STORAGE_KEYS,
+  getClientAuthHeaders,
 } from "../../utils/api";
 import { getMapTileLayer } from "../../utils/mapTiles";
 import { generateStoreWithin700m } from "../../utils/geo";
@@ -81,6 +82,11 @@ const normalizeAddressList = (data) => {
   return [];
 };
 
+const getApiErrorMessage = (response, fallbackMessage, data = {}) =>
+  response.status === 401
+    ? "Session expired. Please log in again."
+    : data?.message || fallbackMessage;
+
 const readClient = () => {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEYS.client) || "{}");
@@ -113,12 +119,17 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
   useEffect(() => {
     const fetchAddresses = async () => {
       setLoadingAddresses(true);
+      setError("");
 
       try {
         const response = await fetch(`${ADDRESS_BASE}/address`, {
+          headers: getClientAuthHeaders(),
           credentials: "include",
         });
         const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(getApiErrorMessage(response, "Unable to load saved addresses.", data));
+        }
         const list = normalizeAddressList(data);
         setAddresses(list);
 
@@ -128,6 +139,7 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
         }
       } catch (requestError) {
         setAddresses([]);
+        setError(requestError?.message || "Unable to load saved addresses.");
       } finally {
         setLoadingAddresses(false);
       }
@@ -202,10 +214,15 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
   }, [addresses, selectedAddressId]);
 
   const refreshAddresses = async () => {
+    setError("");
     const response = await fetch(`${ADDRESS_BASE}/address`, {
+      headers: getClientAuthHeaders(),
       credentials: "include",
     });
     const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(getApiErrorMessage(response, "Unable to refresh addresses.", data));
+    }
     const list = normalizeAddressList(data);
     setAddresses(list);
 
@@ -227,12 +244,14 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
   };
 
   const openAddAddress = () => {
+    setError("");
     setAddressFormData({ ...EMPTY_ADDRESS_FORM });
     setShowAddressForm(true);
   };
 
   const openEditAddress = () => {
     if (!addresses.length) return;
+    setError("");
     const selected =
       addresses.find((item) => String(item.id) === String(selectedAddressId)) || addresses[0];
     setAddressFormData({ ...selected });
@@ -280,6 +299,7 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
 
   const saveAddress = async (event) => {
     event.preventDefault();
+    setError("");
 
     const payload = {
       ...addressFormData,
@@ -293,19 +313,22 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
 
       const response = await fetch(targetUrl, {
         method: addressFormData.id ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getClientAuthHeaders({ "Content-Type": "application/json" }),
         credentials: "include",
         body: JSON.stringify(payload),
       });
 
+      const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error("Failed to save address.");
+        throw new Error(getApiErrorMessage(response, "Failed to save address.", data));
       }
 
       await refreshAddresses();
       setShowAddressForm(false);
     } catch (requestError) {
-      window.alert("Failed to save address.");
+      const message = requestError?.message || "Failed to save address.";
+      setError(message);
+      window.alert(message);
     }
   };
 
@@ -335,14 +358,14 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
 
     const response = await fetch(`${DELIVERY_BASE}/order`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getClientAuthHeaders({ "Content-Type": "application/json" }),
       credentials: "include",
       body: JSON.stringify(payload),
     });
 
     const data = await response.json().catch(() => ({}));
     if (!response.ok || data?.success === false) {
-      throw new Error(data?.message || "Unable to place order.");
+      throw new Error(getApiErrorMessage(response, "Unable to place order.", data));
     }
 
     onOrderPlaced(data?.order || data);

@@ -40,6 +40,9 @@ export default function ClientLogin() {
         const data = await response.json().catch(() => ({}));
         if (response.ok && data.success) {
           localStorage.setItem(STORAGE_KEYS.client, JSON.stringify(data.user || {}));
+          if (data.token) {
+            localStorage.setItem(STORAGE_KEYS.clientToken, data.token);
+          }
           localStorage.setItem("marsUser", JSON.stringify(data.user || {}));
           navigate("/store", { replace: true });
           return;

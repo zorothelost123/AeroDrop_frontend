@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
-import { BASE_URL, DELIVERY_BASE, STORAGE_KEYS } from "../../utils/api";
+import {
+  BASE_URL,
+  DELIVERY_BASE,
+  STORAGE_KEYS,
+  getOwnerAuthHeaders,
+} from "../../utils/api";
 import { useTheme } from "../../utils/theme";
 import "./OwnerDashboard.css";
 
@@ -82,7 +87,10 @@ export default function OwnerDashboard() {
 
   const fetchAgents = useCallback(async () => {
     try {
-      const response = await fetch(`${DELIVERY_BASE}/owner/agents`, { credentials: "include" });
+      const response = await fetch(`${DELIVERY_BASE}/owner/agents`, {
+        headers: getOwnerAuthHeaders(),
+        credentials: "include",
+      });
       const data = await response.json().catch(() => ({}));
       const list = data?.agents || data || [];
       setAgents(Array.isArray(list) ? list : []);
@@ -131,6 +139,7 @@ export default function OwnerDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem(STORAGE_KEYS.owner);
+    localStorage.removeItem(STORAGE_KEYS.ownerToken);
     localStorage.removeItem("martOwner");
     navigate("/", { replace: true });
   };
@@ -157,7 +166,7 @@ export default function OwnerDashboard() {
     try {
       await fetch(`${DELIVERY_BASE}/owner/agents`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getOwnerAuthHeaders({ "Content-Type": "application/json" }),
         credentials: "include",
         body: JSON.stringify(newAgent),
       });

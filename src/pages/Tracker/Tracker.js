@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import L from "leaflet";
 import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { BASE_URL, DELIVERY_BASE } from "../../utils/api";
+import { BASE_URL, DELIVERY_BASE, getClientAuthHeaders } from "../../utils/api";
 import { getMapTileLayer } from "../../utils/mapTiles";
 import { generateStoreWithin700m, parseCoords } from "../../utils/geo";
 import { useTheme } from "../../utils/theme";
@@ -112,6 +112,7 @@ export default function Tracker() {
 
       try {
         const response = await fetch(`${DELIVERY_BASE}/track/${orderId}`, {
+          headers: getClientAuthHeaders(),
           credentials: "include",
         });
         const data = await response.json().catch(() => ({}));
@@ -228,6 +229,7 @@ export default function Tracker() {
     try {
       const response = await fetch(`${DELIVERY_BASE}/cancel/${orderId}`, {
         method: "PUT",
+        headers: getClientAuthHeaders(),
         credentials: "include",
       });
       const data = await response.json().catch(() => ({}));

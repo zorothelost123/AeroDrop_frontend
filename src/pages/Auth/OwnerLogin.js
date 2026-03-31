@@ -36,6 +36,9 @@ export default function OwnerLogin() {
         const data = await response.json().catch(() => ({}));
         if (response.ok && data.success) {
           localStorage.setItem(STORAGE_KEYS.owner, JSON.stringify(data.owner || {}));
+          if (data.token) {
+            localStorage.setItem(STORAGE_KEYS.ownerToken, data.token);
+          }
           localStorage.setItem("martOwner", JSON.stringify(data.owner || {}));
           navigate("/owner/dashboard", { replace: true });
           return;

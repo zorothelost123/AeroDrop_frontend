@@ -11,8 +11,33 @@ export const PAYMENT_BASE = `${API_BASE}/payment`;
 
 export const STORAGE_KEYS = {
   client: "aero-client",
+  clientToken: "aero-client-token",
   owner: "aero-owner",
+  ownerToken: "aero-owner-token",
   agent: "mm-agent",
   agentToken: "mm-agent-token",
   cart: "aero-cart-items",
 };
+
+const readStoredToken = (storageKey) => {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  return window.localStorage.getItem(storageKey) || "";
+};
+
+const buildAuthHeaders = (storageKey, headers = {}) => {
+  const token = readStoredToken(storageKey);
+
+  return {
+    ...headers,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
+
+export const getClientAuthHeaders = (headers = {}) =>
+  buildAuthHeaders(STORAGE_KEYS.clientToken, headers);
+
+export const getOwnerAuthHeaders = (headers = {}) =>
+  buildAuthHeaders(STORAGE_KEYS.ownerToken, headers);
