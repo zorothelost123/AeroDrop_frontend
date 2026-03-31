@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { BASE_URL, DELIVERY_BASE, STORAGE_KEYS } from "../../utils/api";
+import { useTheme } from "../../utils/theme";
 import "./OwnerDashboard.css";
 
 const readOwner = () => {
@@ -28,20 +29,7 @@ export default function OwnerDashboard() {
   const owner = useMemo(() => readOwner(), []);
 
   const [activeTab, setActiveTab] = useState("Orders");
-  const [theme, setTheme] = useState(() => localStorage.getItem("aeroTheme") || "dark");
-
-  useEffect(() => {
-    localStorage.setItem("aeroTheme", theme);
-    if (theme === "dark") {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === "dark" ? "light" : "dark");
-  };
+  const { theme, toggleTheme } = useTheme();
 
   // Orders State
   const [orders, setOrders] = useState([]);

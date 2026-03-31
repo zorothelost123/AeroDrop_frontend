@@ -3,17 +3,17 @@
 :root {
   --bg-0: #040914;
   --bg-1: #09192f;
-  --panel: rgba(15, 27, 46, 0.62);
-  --panel-solid: #10203a;
-  --text-0: #e8f1ff;
-  --text-1: #97afd3;
+  --panel: rgba(255, 255, 255, 0.74);
+  --panel-solid: #ffffff;
+  --text-0: #101828;
+  --text-1: #5f6c80;
   --cyan: #1be8ff;
   --orange: #ff6a2d;
   --danger: #ff4d66;
   --success: #31d5a1;
   --ring: rgba(27, 232, 255, 0.25);
   --shadow-deep: 0 30px 70px rgba(2, 8, 23, 0.58);
-  --shadow-glow: 0 12px 40px rgba(27, 232, 255, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-glow: 0 14px 34px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.7);
   --radius-xl: 22px;
   --radius-lg: 16px;
   
@@ -41,6 +41,10 @@
 }
 
 body.dark-mode, .dark-mode {
+  --panel: rgba(15, 27, 46, 0.62);
+  --panel-solid: #10203a;
+  --text-0: #e8f1ff;
+  --text-1: #97afd3;
   --bg-primary: #06111f;
   --bg-secondary: #040b15;
   --hero-surface: linear-gradient(180deg, #091627 0%, #06111f 45%, #040b15 100%);
@@ -60,6 +64,7 @@ body.dark-mode, .dark-mode {
   --hero-orb-right: rgba(255, 82, 0, 0.18);
   --shadow-soft: 0 24px 70px rgba(0, 0, 0, 0.24);
   --shadow-strong: 0 32px 100px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 12px 40px rgba(27, 232, 255, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --toggle-track: rgba(255, 255, 255, 0.14);
   --toggle-thumb: linear-gradient(135deg, #ffffff 0%, #d3e3ff 100%);
 }
@@ -77,12 +82,13 @@ body,
 body {
   margin: 0;
   font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  color: var(--text-0);
+  color: var(--text-primary);
   background:
-    radial-gradient(circle at 12% 18%, #13355f 0%, transparent 34%),
-    radial-gradient(circle at 92% 12%, #2a1d41 0%, transparent 28%),
-    linear-gradient(140deg, var(--bg-0), var(--bg-1));
+    radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--brand-highlight) 18%, transparent) 0%, transparent 34%),
+    radial-gradient(circle at 92% 12%, color-mix(in srgb, var(--brand-accent) 16%, transparent) 0%, transparent 28%),
+    linear-gradient(140deg, var(--bg-secondary), var(--bg-primary));
   min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 a {
@@ -117,7 +123,7 @@ button {
 
 .glass-panel {
   background: var(--panel);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid var(--line-soft);
   box-shadow: var(--shadow-glow);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -153,17 +159,17 @@ button {
 }
 
 .ui-btn.ghost {
-  color: var(--text-0);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  border: 1px solid var(--line-soft);
+  background: color-mix(in srgb, var(--card-surface) 82%, transparent);
 }
 
 .ui-input {
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--line-soft);
   border-radius: 12px;
-  background: rgba(3, 10, 21, 0.45);
-  color: var(--text-0);
+  background: var(--search-surface);
+  color: var(--text-primary);
   padding: 12px 14px;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;

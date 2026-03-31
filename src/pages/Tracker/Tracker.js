@@ -5,7 +5,9 @@ import L from "leaflet";
 import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { BASE_URL, DELIVERY_BASE } from "../../utils/api";
+import { getMapTileLayer } from "../../utils/mapTiles";
 import { generateStoreWithin700m, parseCoords } from "../../utils/geo";
+import { useTheme } from "../../utils/theme";
 import "./Tracker.css";
 
 const storeIcon = new L.Icon({
@@ -53,6 +55,8 @@ const STATUS_CLASS_NAME = {
 export default function Tracker() {
   const navigate = useNavigate();
   const { orderId } = useParams();
+  const { theme } = useTheme();
+  const tileLayer = useMemo(() => getMapTileLayer(theme), [theme]);
 
   const [status, setStatus] = useState("Loading...");
   const [eta, setEta] = useState("--");
@@ -335,8 +339,8 @@ export default function Tracker() {
                   style={{ height: "100%", width: "100%" }}
                 >
                   <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    attribution={tileLayer.attribution}
+                    url={tileLayer.url}
                   />
 
                   {storeLocation && (

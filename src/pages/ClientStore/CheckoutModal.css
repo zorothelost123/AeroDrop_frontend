@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 140;
-  background: rgba(4, 9, 20, 0.76);
+  background: color-mix(in srgb, var(--bg-secondary) 72%, transparent);
   display: flex;
   justify-content: flex-end;
 }
@@ -20,12 +20,13 @@
   overflow-y: auto;
   border: 0;
   background:
-    radial-gradient(circle at top right, rgba(27, 232, 255, 0.08), transparent 26%),
-    linear-gradient(180deg, rgba(9, 25, 47, 0.98) 0%, rgba(5, 16, 31, 0.98) 100%);
-  box-shadow: -20px 0 60px rgba(2, 8, 23, 0.34);
+    radial-gradient(circle at top right, color-mix(in srgb, var(--brand-highlight) 14%, transparent), transparent 26%),
+    linear-gradient(180deg, var(--card-surface) 0%, var(--bg-primary) 100%);
+  box-shadow: -20px 0 60px color-mix(in srgb, var(--bg-secondary) 40%, transparent);
   animation: checkoutDrawerIn 0.32s cubic-bezier(0.22, 1, 0.36, 1);
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  color: var(--text-primary);
 }
 
 @keyframes checkoutDrawerIn {
@@ -48,14 +49,14 @@
   gap: 14px;
   margin: -18px -18px 0;
   padding: 18px 18px 14px;
-  background: rgba(7, 15, 28, 0.9);
+  background: color-mix(in srgb, var(--card-surface) 88%, transparent);
   backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .checkout-kicker {
   margin: 0 0 6px;
-  color: #8af0ff;
+  color: var(--brand-highlight);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -72,10 +73,10 @@
 .checkout-close {
   width: 42px;
   height: 42px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--line-soft);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  color: #f2f7ff;
+  background: color-mix(in srgb, var(--card-surface) 72%, transparent);
+  color: var(--text-primary);
   font-size: 28px;
   line-height: 1;
 }
@@ -87,8 +88,8 @@
 }
 
 .checkout-block {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line-soft);
+  background: color-mix(in srgb, var(--search-surface) 88%, transparent);
   border-radius: 18px;
   padding: 14px;
 }
@@ -113,7 +114,7 @@
 
 .checkout-helper {
   margin: 10px 0 0;
-  color: #b4cae8;
+  color: var(--text-secondary);
 }
 
 .checkout-address-list {
@@ -126,16 +127,16 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--line-soft);
   border-radius: 14px;
   padding: 12px;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--search-surface);
 }
 
 .checkout-address.selected {
-  border-color: rgba(27, 232, 255, 0.55);
-  box-shadow: inset 0 0 0 1px rgba(27, 232, 255, 0.2);
+  border-color: var(--brand-highlight);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand-highlight) 25%, transparent);
 }
 
 .checkout-address strong {
@@ -145,13 +146,13 @@
 .checkout-address small {
   display: block;
   margin-top: 4px;
-  color: #a9c3e8;
+  color: var(--text-secondary);
   line-height: 1.55;
 }
 
 .map-block p {
   margin: 0 0 10px;
-  color: #8af0ff;
+  color: var(--brand-highlight);
   font-weight: 700;
 }
 
@@ -160,22 +161,22 @@
   height: 280px;
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 32px rgba(2, 8, 23, 0.34);
+  border: 1px solid var(--line-soft);
+  box-shadow: var(--shadow-soft);
 }
 
 .checkout-summary-row {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  color: #b8cae6;
+  color: var(--text-secondary);
 }
 
 .checkout-summary-row.total {
   margin-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--line-soft);
   padding-top: 10px;
-  color: #e9f1ff;
+  color: var(--text-primary);
 }
 
 .checkout-error {
@@ -192,7 +193,7 @@
   position: fixed;
   inset: 0;
   z-index: 160;
-  background: rgba(4, 9, 20, 0.82);
+  background: color-mix(in srgb, var(--bg-secondary) 82%, transparent);
   display: grid;
   place-items: center;
   padding: 12px;
@@ -231,7 +232,7 @@
 .checkout-form label {
   display: grid;
   gap: 6px;
-  color: #c8d9f4;
+  color: var(--text-primary);
   font-size: 13px;
 }
 
@@ -245,7 +246,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #b4cae7;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 760px) {

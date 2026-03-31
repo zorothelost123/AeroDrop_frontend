@@ -9,7 +9,9 @@ import {
   RAZORPAY_KEY,
   STORAGE_KEYS,
 } from "../../utils/api";
+import { getMapTileLayer } from "../../utils/mapTiles";
 import { generateStoreWithin700m } from "../../utils/geo";
+import { useTheme } from "../../utils/theme";
 import "./CheckoutModal.css";
 
 const FALLBACK_PIN = [16.3067, 80.4365];
@@ -89,6 +91,8 @@ const readClient = () => {
 
 export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlaced }) {
   const client = useMemo(() => readClient(), []);
+  const { theme } = useTheme();
+  const tileLayer = useMemo(() => getMapTileLayer(theme), [theme]);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const [loadingAddresses, setLoadingAddresses] = useState(true);
@@ -346,14 +350,25 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
 
   const handlePayAndPlaceOrder = async () => {
     setError("");
+    if (!selectedAddressId) {
+      setError("Select a delivery address to continue.");
+      return;
+    }
+
+    if (!deliveryPin) {
+      setError("Delivery pin is still loading. Please try again.");
+      return;
+    }
+
+    if (!client?.user_id) {
+      setError("Please log in again before placing an order.");
+      return;
+    }
+
     setIsProcessingPayment(true);
+    setIsPlacingOrder(false);
 
     try {
-      const scriptLoaded = await loadRazorpayScript();
-      if (!scriptLoaded) {
-        throw new Error("Unable to load payment gateway.");
-      }
-
       const createOrderResponse = await fetch(`${PAYMENT_BASE}/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -377,14 +392,22 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
 
       if (createOrderResponse.status === 404) {
         setIsPlacingOrder(true);
-        await placeDeliveryOrder();
-        setIsPlacingOrder(false);
-        setIsProcessingPayment(false);
+        try {
+          await placeDeliveryOrder();
+        } finally {
+          setIsPlacingOrder(false);
+          setIsProcessingPayment(false);
+        }
         return;
       }
 
       if (!createOrderResponse.ok || !razorpayOrder?.id) {
         throw new Error(createOrderData?.message || "Payment order creation failed.");
+      }
+
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        throw new Error("Unable to load payment gateway.");
       }
 
       const options = {
@@ -451,6 +474,7 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
       rzp.open();
     } catch (requestError) {
       setError(requestError?.message || "Unable to start payment.");
+      setIsPlacingOrder(false);
       setIsProcessingPayment(false);
     }
   };
@@ -538,7 +562,7 @@ export default function CheckoutModal({ cart, formatPrice, onClose, onOrderPlace
                   zoom={18}
                   style={{ height: "100%", width: "100%" }}
                 >
-                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  <TileLayer attribution={tileLayer.attribution} url={tileLayer.url} />
                   <Marker
                     position={deliveryPin}
                     draggable={true}

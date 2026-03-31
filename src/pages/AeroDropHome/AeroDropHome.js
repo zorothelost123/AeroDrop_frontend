@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AeroDrop3DHero from "../../components/AeroDrop3DHero/AeroDrop3DHero";
+import { useTheme } from "../../utils/theme";
 import "./AeroDropHome.css";
 
 const moduleGuides = [
@@ -108,7 +109,7 @@ const accessCards = [
 
 export default function AeroDropHome() {
   const navigate = useNavigate();
-  const [theme, setTheme] = useState("light");
+  const { theme, toggleTheme } = useTheme();
   const [openModule, setOpenModule] = useState("client");
 
   const handleSearch = () => {
@@ -145,7 +146,7 @@ export default function AeroDropHome() {
           <button
             type="button"
             className="theme-toggle"
-            onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
+            onClick={toggleTheme}
             aria-label="Toggle theme"
           >
             <span className="toggle-track" aria-hidden="true">

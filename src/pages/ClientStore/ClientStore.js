@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import FloatingCart from "../../components/FloatingCart/FloatingCart";
 import CheckoutModal from "./CheckoutModal";
 import { DELIVERY_BASE, STORAGE_KEYS } from "../../utils/api";
+import { useTheme } from "../../utils/theme";
 import "./ClientStore.css";
 
 const formatPrice = (value) =>
@@ -85,20 +86,7 @@ export default function ClientStore() {
   const [showOrders, setShowOrders] = useState(false);
   const [orderHistory, setOrderHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem("aeroTheme") || "dark");
-
-  useEffect(() => {
-    localStorage.setItem("aeroTheme", theme);
-    if (theme === "dark") {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === "dark" ? "light" : "dark");
-  };
+  const { theme, toggleTheme } = useTheme();
 
   const client = useMemo(() => readClient(), []);
 

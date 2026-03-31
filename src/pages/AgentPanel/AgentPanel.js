@@ -5,7 +5,9 @@ import L from "leaflet";
 import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { BASE_URL, DELIVERY_BASE, STORAGE_KEYS } from "../../utils/api";
+import { getMapTileLayer } from "../../utils/mapTiles";
 import { calculateDistanceKm, parseCoords } from "../../utils/geo";
+import { useTheme } from "../../utils/theme";
 import "./AgentPanel.css";
 
 const storeIcon = new L.Icon({
@@ -72,6 +74,8 @@ const parseItems = (items) => {
 
 export default function AgentPanel() {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
+  const tileLayer = useMemo(() => getMapTileLayer(theme), [theme]);
 
   const [agent, setAgent] = useState(() => readAgent());
   const [isOnline, setIsOnline] = useState(false);
@@ -86,20 +90,6 @@ export default function AgentPanel() {
   const [simIndex, setSimIndex] = useState(0);
   const [enteredOtp, setEnteredOtp] = useState("");
   const [otpError, setOtpError] = useState("");
-  const [theme, setTheme] = useState(() => localStorage.getItem("aeroTheme") || "dark");
-
-  useEffect(() => {
-    localStorage.setItem("aeroTheme", theme);
-    if (theme === "dark") {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === "dark" ? "light" : "dark");
-  };
 
   const handleStatusToggle = async () => {
     const nextStatus = !isOnline;
@@ -282,10 +272,10 @@ export default function AgentPanel() {
       let startLocation = null;
       let endLocation = null;
 
-      if (["ASSIGNED", "AGENT_REACHING_STORE"].includes(orderStatus)) {
+      if (["PREPARING", "ASSIGNED", "AGENT_REACHING_STORE"].includes(orderStatus)) {
         startLocation = liveLocation || workingZone;
         endLocation = storeLocation;
-      } else if (["ON_THE_WAY", "REACHED"].includes(orderStatus)) {
+      } else if (["PICKED_UP", "ON_THE_WAY", "REACHED"].includes(orderStatus)) {
         startLocation = liveLocation || storeLocation;
         endLocation = customerLocation;
       } else {
@@ -442,7 +432,7 @@ export default function AgentPanel() {
       parseCoords(activeOrder.delivery_agent_coords) ||
       HYDERABAD_FALLBACK;
     const customerLocation = parseCoords(activeOrder.customer_coords) || HYDERABAD_FALLBACK;
-    const isStageOne = ["ASSIGNED", "AGENT_REACHING_STORE"].includes(status);
+    const isStageOne = ["PREPARING", "ASSIGNED", "AGENT_REACHING_STORE"].includes(status);
     const currentPoint = isStageOne
       ? liveLocation || workingZone || storeLocation || HYDERABAD_FALLBACK
       : liveLocation || storeLocation || workingZone || HYDERABAD_FALLBACK;
@@ -510,10 +500,10 @@ export default function AgentPanel() {
               </div>
             )}
 
-            {["ASSIGNED", "AGENT_REACHING_STORE", "ON_THE_WAY"].includes(status) && (
+            {["PREPARING", "ASSIGNED", "AGENT_REACHING_STORE", "PICKED_UP", "ON_THE_WAY"].includes(status) && (
               <div className="agent-map-wrap">
                 <MapContainer center={currentPoint} zoom={13} style={{ height: "290px", width: "100%" }}>
-                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  <TileLayer attribution={tileLayer.attribution} url={tileLayer.url} />
                   {liveLocation && (
                     <Marker position={liveLocation} icon={agentIcon}>
                       <Popup>You (Agent)</Popup>
@@ -642,7 +632,7 @@ export default function AgentPanel() {
 
             <div className="agent-zone-map">
               <MapContainer center={zoneCenter} zoom={13} style={{ height: "320px", width: "100%" }}>
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                <TileLayer attribution={tileLayer.attribution} url={tileLayer.url} />
                 <Marker
                   position={zoneCenter}
                   icon={agentIcon}
