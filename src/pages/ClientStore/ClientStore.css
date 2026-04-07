@@ -53,7 +53,7 @@
 .store-state {
   border-radius: 18px;
   border: 1px solid var(--line-soft);
-  background: var(--search-surface);
+  background: var(--surface-raised);
   color: var(--text-primary);
   padding: 16px;
   box-shadow: var(--shadow-soft);
@@ -283,7 +283,7 @@
 .store-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: color-mix(in srgb, var(--bg-secondary) 72%, transparent);
   backdrop-filter: blur(8px);
   z-index: 120;
   display: grid;
@@ -296,7 +296,9 @@
   width: min(720px, 100%);
   border-radius: 24px;
   padding: 24px;
-  background: var(--card-surface);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--brand-highlight) 12%, transparent), transparent 28%),
+    linear-gradient(180deg, var(--surface-raised) 0%, var(--surface-soft) 100%);
   border: 1px solid var(--line-soft);
   max-height: calc(100vh - 30px);
   overflow: auto;
@@ -339,7 +341,7 @@
 .store-cart-item,
 .store-order-item {
   border: 1px solid var(--line-soft);
-  background: var(--search-surface);
+  background: var(--surface-raised);
   border-radius: 16px;
   padding: 14px;
   display: flex;

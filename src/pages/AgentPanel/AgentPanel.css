@@ -71,13 +71,14 @@
   margin-top: 16px;
   border-radius: 16px;
   border: 1px solid var(--line-soft);
-  background: var(--search-surface);
+  background: color-mix(in srgb, var(--surface-soft) 96%, transparent);
   padding: 20px;
   box-shadow: var(--shadow-soft);
 }
 
 .agent-zone-card h3 {
   margin: 0;
+  color: var(--text-primary);
 }
 
 .agent-zone-card p {
@@ -92,6 +93,7 @@
   overflow: hidden;
   border: 1px solid var(--line-soft);
   box-shadow: var(--shadow-soft);
+  background: var(--map-frame);
 }
 
 .agent-active-card p {
@@ -111,7 +113,7 @@
 .agent-items-box {
   border-radius: 10px;
   border: 1px solid var(--line-soft);
-  background: var(--card-surface);
+  background: var(--surface-raised);
   padding: 10px;
 }
 
@@ -130,7 +132,7 @@
   margin-top: 8px;
   border-radius: 10px;
   border: 1px solid var(--line-soft);
-  background: var(--card-surface);
+  background: var(--surface-raised);
   padding: 10px;
   display: flex;
   justify-content: space-between;
@@ -199,7 +201,7 @@
   margin-top: 10px;
   border-radius: 12px;
   border: 1px dashed var(--line-soft);
-  background: var(--card-surface);
+  background: var(--surface-raised);
   padding: 14px;
   color: var(--text-soft);
   text-align: center;
@@ -220,7 +222,7 @@
   align-items: center;
   gap: 8px;
   border: 1px solid var(--line-soft);
-  background: var(--card-surface);
+  background: var(--surface-raised);
 }
 
 .agent-job-card h3 {

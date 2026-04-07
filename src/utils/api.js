@@ -1,4 +1,22 @@
-const rawBaseUrl = process.env.REACT_APP_API_URL || "";
+const LOCAL_API_BASE_URL = "http://localhost:5000";
+
+const resolveBaseUrl = () => {
+  const configuredBaseUrl = String(process.env.REACT_APP_API_URL || "").trim();
+  if (configuredBaseUrl) {
+    return configuredBaseUrl;
+  }
+
+  if (typeof window !== "undefined") {
+    const hostname = window.location.hostname;
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return LOCAL_API_BASE_URL;
+    }
+  }
+
+  return "";
+};
+
+const rawBaseUrl = resolveBaseUrl();
 
 // Trim trailing slashes so `${BASE_URL}/...` joins remain stable.
 export const BASE_URL = rawBaseUrl.replace(/\/+$/, "");

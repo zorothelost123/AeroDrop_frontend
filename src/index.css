@@ -38,6 +38,14 @@
   --shadow-strong: 0 28px 80px rgba(15, 23, 42, 0.16);
   --toggle-track: #d8e0eb;
   --toggle-thumb: linear-gradient(135deg, #ffffff 0%, #dce6f3 100%);
+  --surface-raised: rgba(255, 255, 255, 0.94);
+  --surface-soft: rgba(248, 250, 252, 0.88);
+  --surface-contrast: rgba(255, 255, 255, 0.98);
+  --table-head: rgba(15, 23, 42, 0.05);
+  --table-row-hover: rgba(15, 23, 42, 0.03);
+  --status-neutral: rgba(15, 23, 42, 0.08);
+  --map-frame: #dce6f1;
+  --map-tile-filter: none;
 }
 
 body.dark-mode, .dark-mode {
@@ -67,6 +75,14 @@ body.dark-mode, .dark-mode {
   --shadow-glow: 0 12px 40px rgba(27, 232, 255, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --toggle-track: rgba(255, 255, 255, 0.14);
   --toggle-thumb: linear-gradient(135deg, #ffffff 0%, #d3e3ff 100%);
+  --surface-raised: rgba(10, 20, 36, 0.94);
+  --surface-soft: rgba(16, 29, 49, 0.88);
+  --surface-contrast: rgba(24, 37, 60, 0.96);
+  --table-head: rgba(255, 255, 255, 0.06);
+  --table-row-hover: rgba(255, 255, 255, 0.03);
+  --status-neutral: rgba(255, 255, 255, 0.1);
+  --map-frame: #08111d;
+  --map-tile-filter: invert(1) hue-rotate(180deg) saturate(0.42) brightness(0.88) contrast(0.9);
 }
 
 * {
@@ -237,4 +253,50 @@ body.dark-mode .toggle-thumb, .dark-mode .toggle-thumb {
 .theme-toggle-label {
   font-size: 14px;
   font-weight: 700;
+}
+
+.leaflet-container {
+  background: var(--map-frame);
+  color: var(--text-primary);
+  font-family: inherit;
+}
+
+.leaflet-bar {
+  border: 1px solid var(--line-soft);
+  box-shadow: var(--shadow-soft);
+}
+
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.leaflet-control-attribution {
+  background: color-mix(in srgb, var(--surface-raised) 88%, transparent) !important;
+  color: var(--text-secondary) !important;
+}
+
+.leaflet-control-attribution a {
+  color: var(--brand-highlight) !important;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+body.dark-mode .leaflet-tile-pane,
+.dark-mode .leaflet-tile-pane {
+  filter: var(--map-tile-filter);
+}
+
+body.dark-mode .leaflet-bar a,
+body.dark-mode .leaflet-bar a:hover,
+.dark-mode .leaflet-bar a,
+.dark-mode .leaflet-bar a:hover {
+  background: rgba(10, 20, 36, 0.92);
+  color: var(--text-primary);
 }
